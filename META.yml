@@ -1,0 +1,27 @@
+--- #YAML:1.0
+name:               Archive-SimpleExtractor
+version:            0.02
+abstract:           simple vodule for extract archives
+author:
+    - Sergey Tomoulevitch <phoinix.public@gmail.com>
+license:            perl
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
+requires:
+    Archive::Rar:         2.0
+    Archive::Tar:         1.0
+    Archive::Zip:         1.0
+    Module::Load:         0.16
+    Module::Load::Conditional:  0.30
+    Test::More:           0
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.52
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4

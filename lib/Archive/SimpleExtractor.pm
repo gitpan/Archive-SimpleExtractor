@@ -16,7 +16,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -99,6 +99,12 @@ sub extract {
     my @result = $extractor->extract(%arguments);
     return @result;
 }
+
+=head2 have_extractor
+
+Check extractor
+
+=cut
 
 sub have_extractor {
     my $self = shift;
