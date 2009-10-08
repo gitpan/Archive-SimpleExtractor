@@ -7,7 +7,6 @@ use File::Find;
 use File::Copy;
 use File::Path qw/rmtree/;
 
-
 =head1 NAME
 
 =head1 VERSION
@@ -16,9 +15,9 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
-our $zip = Archive::Zip->new();
+our $tar = Archive::Tar->new;
 
 =head1 SYNOPSIS
 
@@ -33,29 +32,25 @@ our $zip = Archive::Zip->new();
 sub extract {
     my $self = shift;
     my %arguments = @_;
-    #unless ( $zip->read($arguments{archive}) == AZ_OK ) { return (0, 'Can not read archive file'.$arguments{archive}) }
-    #if ($arguments{tree}) {
-    #    $zip->extractTree( '' , $arguments{dir} ) || return (0, 'Can not extract archive' );
-    #    return (1, 'Extract finished with directory tree');
-    #} else {
-    #    my $tmp_dir = '.tmp'.rand(10000).'/';
-    #        mkdir $arguments{dir}.$tmp_dir || return (0, 'Can not create temp_directory '.$! );
-    #        $tmp_dir = $arguments{dir}.$tmp_dir;
-    #    $zip->extractTree( '' , $tmp_dir ) || return (0, 'Can not extract archive' );
-    #    find(   { wanted => sub {
-    #                                if (-f $File::Find::name) {
-    #                                    my ($filename) = $File::Find::name =~ /\/([^\/]+)$/;
-    #                                    copy($File::Find::name, $arguments{dir}.$filename);
-    #                                }
-    #                            },
-    #                            no_chdir => 1,
-    #            },
-    #            $tmp_dir,
-    #        );
-    #    rmtree($tmp_dir);
-    #    return (1, 'Extract finished without directory tree');
-    #}
-    return 1,1;
+    my ($archive_file) = $arguments{archive} =~ /\/?([^\/]+)$/;
+    copy($arguments{archive}, $arguments{dir}.$archive_file);
+    chdir $arguments{dir};
+    unless ( $tar->read($archive_file) ) { return (0, 'Can not read archive file'.$arguments{archive}) }
+    my @files = $tar->extract();
+    return (0, 'Can not extract archive' ) unless @files;
+    if ($arguments{tree}) {
+        unlink $archive_file;
+        return (1, 'Extract finished with directory tree');
+    } else {
+        foreach my $file (@files) {
+            next if -d $file->full_path;
+            my ($filename) =  $file->full_path =~ /\/([^\/]+)$/;
+            copy($file->full_path, $filename);
+        }
+        foreach my $item (<*>) {if (-d $item) {rmtree($item)}}
+        unlink $archive_file;
+        return (1, 'Extract finished without directory tree');
+    }
 }
 
 1;

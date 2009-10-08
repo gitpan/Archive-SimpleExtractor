@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:               Archive-SimpleExtractor
-version:            0.02
-abstract:           simple vodule for extract archives
+version:            0.03
+abstract:           simple module for extract archives
 author:
     - Sergey Tomoulevitch <phoinix.public@gmail.com>
 license:            perl

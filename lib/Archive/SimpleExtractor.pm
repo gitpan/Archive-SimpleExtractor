@@ -8,7 +8,7 @@ $Module::Load::Conditional::VERBOSE = 1;
 
 =head1 NAME
 
-Archive::SimpleExtractor - simple vodule for extract archives
+Archive::SimpleExtractor - simple module for extract archives
 
 =head1 VERSION
 
@@ -16,7 +16,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 =head1 SYNOPSIS

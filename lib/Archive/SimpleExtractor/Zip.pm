@@ -16,7 +16,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our $zip = Archive::Zip->new();
 
@@ -35,13 +35,14 @@ sub extract {
     my %arguments = @_;
     unless ( $zip->read($arguments{archive}) == AZ_OK ) { return (0, 'Can not read archive file'.$arguments{archive}) }
     if ($arguments{tree}) {
-        $zip->extractTree( '' , $arguments{dir} ) || return (0, 'Can not extract archive' );
+        warn 1;
+        unless ( $zip->extractTree( '' , $arguments{dir} ) == AZ_OK ) { return (0, 'Can not extract archive' ) }
         return (1, 'Extract finished with directory tree');
     } else {
         my $tmp_dir = '.tmp'.rand(10000).'/';
             mkdir $arguments{dir}.$tmp_dir || return (0, 'Can not create temp_directory '.$! );
             $tmp_dir = $arguments{dir}.$tmp_dir;
-        $zip->extractTree( '' , $tmp_dir ) || return (0, 'Can not extract archive' );
+        unless ( $zip->extractTree( '' , $tmp_dir ) == AZ_OK ) { return (0, 'Can not extract archive' ) }
         find(   { wanted => sub {
                                     if (-f $File::Find::name) {
                                         my ($filename) = $File::Find::name =~ /\/([^\/]+)$/;
