@@ -16,7 +16,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 
 =head1 SYNOPSIS
@@ -113,7 +113,7 @@ sub have_extractor {
     my $reg_exp = join('|', keys %{$extentions});
     $reg_exp = qr/$reg_exp/;
     my ($ext) = $filename =~ /\.($reg_exp)$/;
-    return (0, 'No Extractor') unless $extentions->{$ext};
+    return (0, 'No Extractor') unless $ext || $extentions->{$ext};
     my $extractor = $extentions->{$ext};
     return can_load(modules => {$extractor => 0.0}) ? (1, $extractor) : (0, 'Bad Extractor');
 }

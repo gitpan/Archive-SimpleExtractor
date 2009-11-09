@@ -12,7 +12,7 @@ WriteMakefile(
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {
-        'Test::More'                    => '0',
+        'Test::More'                    => '0.90',
         'Module::Load'                  => '0.16',
         'Module::Load::Conditional'     => '0.30',
         'Archive::Rar'                  => '2.0',
