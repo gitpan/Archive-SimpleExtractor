@@ -6,17 +6,17 @@ use Archive::Zip qw/ :ERROR_CODES :CONSTANTS /;
 use File::Find;
 use File::Copy;
 use File::Path qw/rmtree/;
-
+use Cwd 'abs_path';
 
 =head1 NAME
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our $zip = Archive::Zip->new();
 
@@ -33,16 +33,26 @@ our $zip = Archive::Zip->new();
 sub extract {
     my $self = shift;
     my %arguments = @_;
+    $arguments{dir} = abs_path($arguments{dir}).'/';
+    copy($arguments{archive}, $arguments{dir});
+    my ($zipfile) = $arguments{archive} =~ /([^\/]+)$/;
+    $arguments{archive} = $arguments{dir}.$zipfile;
     unless ( $zip->read($arguments{archive}) == AZ_OK ) { return (0, 'Can not read archive file'.$arguments{archive}) }
     if ($arguments{tree}) {
-        warn 1;
-        unless ( $zip->extractTree( '' , $arguments{dir} ) == AZ_OK ) { return (0, 'Can not extract archive' ) }
+        unless ( $zip->extractTree( '' , $arguments{dir} ) == AZ_OK ) {
+            unlink $arguments{archive};
+            return (0, 'Can not extract archive' )
+        }
+        unlink $arguments{archive};
         return (1, 'Extract finished with directory tree');
     } else {
         my $tmp_dir = '.tmp'.rand(10000).'/';
             mkdir $arguments{dir}.$tmp_dir || return (0, 'Can not create temp_directory '.$! );
             $tmp_dir = $arguments{dir}.$tmp_dir;
-        unless ( $zip->extractTree( '' , $tmp_dir ) == AZ_OK ) { return (0, 'Can not extract archive' ) }
+        unless ( $zip->extractTree( '' , $tmp_dir ) == AZ_OK ) {
+            unlink $arguments{archive};
+            return (0, 'Can not extract archive' );
+        }
         find(   { wanted => sub {
                                     if (-f $File::Find::name) {
                                         my ($filename) = $File::Find::name =~ /\/([^\/]+)$/;
@@ -54,6 +64,7 @@ sub extract {
                 $tmp_dir,
             );
         rmtree($tmp_dir);
+        unlink $arguments{archive};
         return (1, 'Extract finished without directory tree');
     }
 }

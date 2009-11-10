@@ -12,11 +12,11 @@ Archive::SimpleExtractor - simple module for extract archives
 
 =head1 VERSION
 
-Version 0.01
+Version 0.06
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 
 =head1 SYNOPSIS
@@ -92,7 +92,6 @@ sub extract {
     my $self = shift;
     my %arguments = @_;
         return (0, 'Bad atributes') unless $arguments{archive} && $arguments{dir};
-    $arguments{dir} .= '/' unless $arguments{dir} =~ m/\/$/; # for zip
         return (0, 'No source directory') unless -d $arguments{dir};
     my ($res, $extractor) = $self->have_extractor($arguments{archive});
         return (0, $extractor) unless $res;

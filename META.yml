@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Archive-SimpleExtractor
-version:            0.05
+version:            0.06
 abstract:           simple module for extract archives
 author:
     - Sergey Tomoulevitch <phoinix.public@gmail.com>
@@ -14,6 +14,7 @@ requires:
     Archive::Rar:         2.0
     Archive::Tar:         1.0
     Archive::Zip:         1.0
+    Cwd:                  3.0
     Module::Load:         0.16
     Module::Load::Conditional:  0.30
     Test::More:           0.90
