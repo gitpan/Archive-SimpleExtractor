@@ -16,7 +16,7 @@ Version 0.06
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.08';
 
 
 =head1 SYNOPSIS
@@ -79,6 +79,10 @@ tree => 1
 By default extractor unpacked arhive without subdirectories, but all files have been extracted in source dir. If you want save stucture set this argument.
 
 
+use_extractor => [file extention]
+
+if archive file have not extentions, your must set this parameter for right select extractor
+
 
 Returns ARRAY:
 
@@ -93,7 +97,7 @@ sub extract {
     my %arguments = @_;
         return (0, 'Bad atributes') unless $arguments{archive} && $arguments{dir};
         return (0, 'No source directory') unless -d $arguments{dir};
-    my ($res, $extractor) = $self->have_extractor($arguments{archive});
+    my ($res, $extractor) = $self->have_extractor(%arguments);
         return (0, $extractor) unless $res;
     my @result = $extractor->extract(%arguments);
     return @result;
@@ -107,11 +111,11 @@ Check extractor
 
 sub have_extractor {
     my $self = shift;
-    my $filename = shift;
-    return (0, 'No file') unless $filename;
+    my %arguments = @_;
+    return (0, 'No file extentions') unless $arguments{archive} || $arguments{use_extractor};
     my $reg_exp = join('|', keys %{$extentions});
     $reg_exp = qr/$reg_exp/;
-    my ($ext) = $filename =~ /\.($reg_exp)$/;
+    my ($ext) = $arguments{use_extractor} || $arguments{archive} =~ /\.($reg_exp)$/;
     return (0, 'No Extractor') unless $ext;
     return (0, 'No Extractor') unless $extentions->{$ext};
     my $extractor = $extentions->{$ext};

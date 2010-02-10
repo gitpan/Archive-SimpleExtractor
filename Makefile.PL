@@ -12,9 +12,6 @@ WriteMakefile(
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {
-        'Archive::Rar'                  => '2.0',
-        'Archive::Tar'                  => '1.0',
-        'Archive::Zip'                  => '1.0',
         'Cwd'                           => '3.0',
         'Module::Load'                  => '0.16',
         'Module::Load::Conditional'     => '0.30',
