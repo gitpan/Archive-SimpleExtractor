@@ -16,7 +16,7 @@ Version 0.06
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 
 =head1 SYNOPSIS
@@ -95,7 +95,7 @@ $res[1] - message or error string
 sub extract {
     my $self = shift;
     my %arguments = @_;
-        return (0, 'Bad atributes') unless $arguments{archive} && $arguments{dir};
+        return (0, 'Bad atributes') unless $arguments{archive} || $arguments{dir};
         return (0, 'No source directory') unless -d $arguments{dir};
     my ($res, $extractor) = $self->have_extractor(%arguments);
         return (0, $extractor) unless $res;
@@ -112,13 +112,13 @@ Check extractor
 sub have_extractor {
     my $self = shift;
     my %arguments = @_;
-    return (0, 'No file extentions') unless $arguments{archive} || $arguments{use_extractor};
     my $reg_exp = join('|', keys %{$extentions});
     $reg_exp = qr/$reg_exp/;
+    no warnings;
     my ($ext) = $arguments{use_extractor} || $arguments{archive} =~ /\.($reg_exp)$/;
     return (0, 'No Extractor') unless $ext;
-    return (0, 'No Extractor') unless $extentions->{$ext};
-    my $extractor = $extentions->{$ext};
+    return (0, 'No Extractor') unless $extentions->{$ext} || {reverse %$extentions}->{$ext};
+    my $extractor = $extentions->{$ext} || $ext;
     return can_load(modules => {$extractor => 0.0}) ? (1, $extractor) : (0, 'Bad Extractor');
 }
 
