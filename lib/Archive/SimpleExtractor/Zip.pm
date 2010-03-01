@@ -12,13 +12,11 @@ use Cwd 'abs_path';
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
 our $VERSION = '0.03';
-
-our $zip = Archive::Zip->new();
 
 =head1 SYNOPSIS
 
@@ -33,6 +31,7 @@ our $zip = Archive::Zip->new();
 sub extract {
     my $self = shift;
     my %arguments = @_;
+    my $zip = Archive::Zip->new();
     $arguments{dir} = abs_path($arguments{dir}).'/';
     copy($arguments{archive}, $arguments{dir});
     my ($zipfile) = $arguments{archive} =~ /([^\/]+)$/;

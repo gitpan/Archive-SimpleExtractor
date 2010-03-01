@@ -11,13 +11,11 @@ use File::Path qw/rmtree/;
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
-
-our $tar = Archive::Tar->new;
+our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 
@@ -32,6 +30,7 @@ our $tar = Archive::Tar->new;
 sub extract {
     my $self = shift;
     my %arguments = @_;
+    my $tar = Archive::Tar->new;
     my ($archive_file) = $arguments{archive} =~ /\/?([^\/]+)$/;
     copy($arguments{archive}, $arguments{dir}.$archive_file);
     chdir $arguments{dir};
